@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Python == 3.x*
+Python == 3.6.2*
 
 gdal == 2.2.1*
 
@@ -38,7 +38,7 @@ outputs will be saved in subfolders named with the corresponding TC band.
 
 Perform a percent clipping on the tasseled cap bands.  Calculate
 upper and lower percentiles using only clear land and water observations.
-This are determined using the scene's PIXELQA band.  The script checks
+These are determined using the scene's PIXELQA band.  The script checks
 for the sensor to use the correct PIXELQA values.  The default percentile
 values are:
 
