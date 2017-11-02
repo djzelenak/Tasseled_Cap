@@ -47,7 +47,7 @@ lower_percentile = 12
 upper_percentile = 88
 
 These can be specified optionally at the command line.  After the percent
-clip, the data is rescaled to 0-255 and saved as new unsigned 8-bit
+clip, the data are rescaled to 0-255 and saved as new unsigned 8-bit
 integer rasters.
 
 ##### 4 add_color.py
