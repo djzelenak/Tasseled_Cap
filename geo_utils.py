@@ -3,7 +3,6 @@ import numpy as np
 
 
 class ChipExtents:
-
     GeoExtent = namedtuple('GeoExtent', ['x_min', 'y_max', 'x_max', 'y_min'])
     GeoAffine = namedtuple('GeoAffine', ['ul_x', 'x_res', 'rot_1', 'ul_y', 'rot_2', 'y_res'])
     GeoCoordinate = namedtuple('GeoCoordinate', ['x', 'y'])
@@ -34,8 +33,7 @@ class ChipExtents:
         self.CHIP_UL = [self.GeoCoordinate(x=i, y=j) for j in self.chip_uly_coords for i in self.chip_ulx_coords]
 
         self.CHIP_EXTENTS = {ind + 1: self.get_chip_extent(chip_coord[0], chip_coord[1]) for ind, chip_coord in
-                        enumerate(self.CHIP_UL)}
-
+                             enumerate(self.CHIP_UL)}
 
     def geo_to_rowcol(self, affine, coord):
         """
@@ -53,7 +51,7 @@ class ChipExtents:
         col = (coord.x - affine.ul_x - affine.ul_y * affine.rot_1) / affine.x_res
 
         return self.RowColumn(row=int(row),
-                         column=int(col))
+                              column=int(col))
 
     def rowcol_to_geo(self, affine, rowcol):
         """
@@ -71,7 +69,6 @@ class ChipExtents:
         y = affine.ul_y + rowcol.column * affine.rot_2 + rowcol.row * affine.y_res
 
         return self.GeoCoordinate(x=x, y=y)
-
 
     def geospatial_hv(self, h, v, loc=CONUS_EXTENT):
         """
@@ -91,7 +88,6 @@ class ChipExtents:
         return (self.GeoExtent(x_min=xmin, x_max=xmax, y_max=ymax, y_min=ymin),
                 self.GeoAffine(ul_x=xmin, x_res=30, rot_1=0, ul_y=ymax, rot_2=0, y_res=-30))
 
-
     def get_chip_extent(self, chip_ulx, chip_uly):
         """
         
@@ -101,30 +97,29 @@ class ChipExtents:
         """
 
         return self.GeoExtent(x_min=chip_ulx, x_max=chip_ulx + 3000,
-                         y_min=chip_uly - 3000, y_max=chip_uly)
+                              y_min=chip_uly - 3000, y_max=chip_uly)
 
     def get_pixel_coords(self, chip_extent):
         """
         Generate the pixel ul coordinates
-        :param chip_ul: 
+        :param chip_extent:
         :return: 
         """
 
-        chip_array = np.zeros((100,100))
+        chip_array = np.zeros((100, 100))
 
         coord_keys = [(i, j) for i in range(100) for j in range(100)]
 
-        pixel_x0 = chip_extent.x_min # + 15
-        pixel_y0 = chip_extent.y_max # - 15
+        pixel_x0 = chip_extent.x_min  # + 15
+        pixel_y0 = chip_extent.y_max  # - 15
 
         pixel_x_coords = [pixel_x0 + (i * 30) for i in range(100)]
         pixel_y_coords = [pixel_y0 - (i * 30) for i in range(100)]
 
-        pixel_dict = {coord_keys[ind_x + ind_y * 100] : self.GeoCoordinate(x=x, y=y)
-                        for ind_y, y in enumerate(pixel_y_coords)
-                        for ind_x, x in enumerate(pixel_x_coords)}
+        pixel_dict = {coord_keys[ind_x + ind_y * 100]: self.GeoCoordinate(x=x, y=y)
+                      for ind_y, y in enumerate(pixel_y_coords)
+                      for ind_x, x in enumerate(pixel_x_coords)}
 
-        return {coord_keys[ind_x + ind_y * 100] : self.GeoCoordinate(x=x, y=y)
+        return {coord_keys[ind_x + ind_y * 100]: self.GeoCoordinate(x=x, y=y)
                 for ind_y, y in enumerate(pixel_y_coords)
                 for ind_x, x in enumerate(pixel_x_coords)}
-
