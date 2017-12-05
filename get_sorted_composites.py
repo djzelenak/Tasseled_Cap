@@ -29,7 +29,7 @@ def read_list(txtfile):
     return flist
 
 
-def do_work(outdir, filelist, indir):
+def do_work(outdir, indir, filelist=None):
     """
 
     :param outdir:
@@ -47,21 +47,25 @@ def do_work(outdir, filelist, indir):
         print("Could not locate files in ", indir)
         sys.exit(1)
 
-    filtered_list = read_list(filelist)
+    if not filelist is None:
+        filtered_list = read_list(filelist)
 
-    filtered_tc = []
+        filtered_tc = []
 
-    for item in main_list:
-        for file in filtered_list:
-            basename = os.path.basename(file)[:-7]
+        for item in main_list:
+            for file in filtered_list:
+                basename = os.path.basename(file)[:-7]
 
-            if basename in item:
-                filtered_tc.append(item)
+                if basename in item:
+                    filtered_tc.append(item)
 
-    if len(filtered_tc) == 0:
-        print("No matching files were found between the filtered tc and main tc lists")
+        if len(filtered_tc) == 0:
+            print("No matching files were found between the filtered tc and main tc lists")
 
-        sys.exit(1)
+            sys.exit(1)
+
+    else:
+        filtered_tc = main_list
 
     # Pull the dates from the filenames as integers
     dates = [int(os.path.basename(file)[15:23]) for file in filtered_tc]
@@ -105,7 +109,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", dest="indir", required=True, type=str,
                         help="Full path to the directory containing Tasseled Cap composites")
 
-    parser.add_argument("-f", dest="filelist", required=True, type=str,
+    parser.add_argument("-f", dest="filelist", required=False, type=str,
                         help="The full path to the .txt file listing the filtered scenes")
 
     parser.add_argument("-o", dest="outdir", required=True, type=str,
